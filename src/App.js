@@ -19,42 +19,52 @@ function App() {
   const traces = [
     {      
       type: 'scatter3d',
-      mode: 'lines+markers',
+      mode: 'lines+markers+text',
       name: '5.56x45 mm',
       x:[85,50,45,40], // DAMAGE
       y:[3,28,43,53], // PEN
       z:[198,178,2784,2988], // PRICE
       text: ["Warmage", "M855", "M855A1", "M995"],
-      marker: {color: 'red', size: 5}
+      marker: {color: 'red', size: 5},
+      textposition: 'top center'
     },
     {      
       type: 'scatter3d',
-      mode: 'lines+markers',
+      mode: 'lines+markers+text',
       name: '7.62x51 mm',
       x:[107,80,70,67], // DAMAGE
       y:[15,41,64,70], // PEN
       z:[261,377,2129,3709], // PRICE
       text: ["Ultra Nosler", "M80", "M61", "M993"],
-      marker: {color: 'blue', size: 5}
-    },
+      marker: {color: 'blue', size: 5},
+      // hovertemplate:
+      // "%{xaxis.title.text}: %{x}<br>" +
+      // "%{yaxis.title.text}: %{y}<br>" +
+      // "%{zaxis.title.text}: %{z}<br>" +
+      // "<extra></extra>"
+    }
   ]
-
-  console.log(traces)
 
   return (
     <Plot
+      config={{displayModeBar: false}}
       data={traces}
       layout={{
+        xaxis: {
+            title: "damage",
+          },
         height: 1200,
         width: 1200,
         title: `Tarko Ammo: Damage/Penetration/Price`,
         autosize: true,
         scene: {
           xaxis: {
-            title: "damage"
+            title: "damage",
+            range: [200, 0],
           },
           yaxis: {
-            title: "penetration"
+            title: "penetration",
+            range: [75, 0],
           },
           zaxis: {
             title: "cost (₽)"
