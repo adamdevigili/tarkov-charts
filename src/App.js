@@ -26,7 +26,12 @@ function App() {
       z:[198,178,2784,2988], // PRICE
       text: ["Warmage", "M855", "M855A1", "M995"],
       marker: {color: 'red', size: 5},
-      textposition: 'top center'
+      textposition: 'top center',
+      hovertemplate:
+      '<b><i>%{text}</i></b><br>' +
+      'Damage: %{x}<br>' +
+      'Pen: %{y}<br>' +
+      'Cost: ₽ %{z}<br>'
     },
     {      
       type: 'scatter3d',
@@ -37,11 +42,11 @@ function App() {
       z:[261,377,2129,3709], // PRICE
       text: ["Ultra Nosler", "M80", "M61", "M993"],
       marker: {color: 'blue', size: 5},
-      // hovertemplate:
-      // "%{xaxis.title.text}: %{x}<br>" +
-      // "%{yaxis.title.text}: %{y}<br>" +
-      // "%{zaxis.title.text}: %{z}<br>" +
-      // "<extra></extra>"
+      hovertemplate:
+        '<b><i>%{text}</i></b><br>' +
+        'Damage: %{x}<br>' +
+        'Pen: %{y}<br>' +
+        'Cost: ₽ %{z}<br>'
     }
   ]
 
