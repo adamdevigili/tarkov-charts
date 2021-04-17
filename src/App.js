@@ -5,17 +5,6 @@ import Plot from 'react-plotly.js';
 // import rawData from './data/ammo.json';
 
 function App() {
-  // const traces = Array(1).fill(0).map((_, i) => {
-  //   const {index, arr} = randomValues(20, 3);
-  //   return {
-  //     x: Array(20).fill(i),
-  //     y: index,
-  //     z: arr,
-  //     type: 'scatter3d',
-  //     mode: 'lines',
-  //   }
-  // });
-
   const baseTrace = {
       type: 'scatter3d',
       mode: 'lines+markers+text',
