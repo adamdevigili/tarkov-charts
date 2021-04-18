@@ -197,7 +197,7 @@ type Props struct {
 	Blindness                              Blindness                   `json:"Blindness"`
 	IsLightAndSoundShot                    bool                        `json:"IsLightAndSoundShot"`
 	LightAndSoundShotAngle                 int                         `json:"LightAndSoundShotAngle"`
-	LightAndSoundShotSelfContusionTime     int                         `json:"LightAndSoundShotSelfContusionTime"`
+	LightAndSoundShotSelfContusionTime      int                         `json:"LightAndSoundShotSelfContusionTime"`
 	LightAndSoundShotSelfContusionStrength int                         `json:"LightAndSoundShotSelfContusionStrength"`
 }
 
@@ -229,6 +229,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err.Error())
 	}
 
+	if config.VERCEL_ENV == "development" {
+		log.Printf("%+v\n", config)
+	}
+
 	if config.VERCEL_ENV != "development" {
 		if r.Header.Get("X-Update-Ammo-API-Key") != config.UPDATE_AMMO_API_KEY {
 			fmt.Fprint(w, "not authorized")
@@ -239,6 +243,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// This is the map we will build of all ammo and relevant information throughout this function
 	// We will eventually write this to our data store
 	parsedAmmo := map[string]*Ammo{}
+	ammoByCaliber := map[string]map[string]*Ammo{}
 
 	client := &http.Client{Timeout: time.Second * 10}
 
@@ -297,9 +302,21 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// When querying for ammo types, we currently get grenades and ammo boxes. Ignore them
-		if !strings.Contains(result.Props.Name, "grenade") && !strings.Contains(result.Props.Name, "pack") {
+		if !strings.Contains(result.Props.Name, "grenade") && 
+			!strings.Contains(result.Props.Name, "pack") &&
+			!strings.Contains(result.Props.Caliber, "Caliber40x46") {
 			// Initialize the final map with BSG data
 			parsedAmmo[item.ID] = &Ammo{
+				Caliber:     result.Props.Caliber,
+				Name:        result.Props.ShortName,
+				Damage:      result.Props.Damage,
+				Penetration: result.Props.PenetrationPower,
+			}
+
+			if ammoByCaliber[result.Props.Caliber] == nil {
+				ammoByCaliber[result.Props.Caliber] = make(map[string]*Ammo)
+			}
+			ammoByCaliber[result.Props.Caliber][item.ID] = &Ammo{
 				Caliber:     result.Props.Caliber,
 				Name:        result.Props.ShortName,
 				Damage:      result.Props.Damage,
@@ -308,9 +325,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+
 	// Fetch current prices of all items and parse.
 	// Other option would be to fetch all 100+ ammo types individually, no thanks.
 	// Also no option to fetch only ammo items via this API :(
+
+	// NOTE: All the API requests can be done in parallel, however since this is intended to be run
+	// periodically (so performance isn't that important), and as a lambda function (where memory
+	// usage is important), we run these in sequence
 	request, _ = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/items/all", nil)
 	request.Header.Set("x-api-key", config.TM_API_KEY)
 	response, err = client.Do(request)
@@ -327,16 +349,22 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("error parsing JSON: ", err)
 	}
 
-	// Since we have all items in Tarkov returned here, and no way to O(1) access by ID,
+	// Since we have all items in Tarkov returned here, and no O(1) access by ID,
 	// iterate over all entries, and update the relevant fields in our target map with
 	// the average 24hr price
 	for _, item := range fleaMarketData {
 		if _, found := parsedAmmo[item.BsgID]; found {
 			parsedAmmo[item.BsgID].Price = item.Avg24HPrice
+
+			for _, ammoMap := range(ammoByCaliber) {
+				if _, found := ammoMap[item.BsgID]; found {
+					ammoMap[item.BsgID].Price = item.Avg24HPrice
+				}
+			}
 		}
 	}
 
-	parsedJSON, err := json.Marshal(parsedAmmo)
+	parsedJSON, err := json.Marshal(ammoByCaliber)
 	if err != nil {
 		log.Fatal("error marshalling JSON: ", err)
 	}
