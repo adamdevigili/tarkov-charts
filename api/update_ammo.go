@@ -15,12 +15,17 @@ import (
 )
 
 // ------- TA3D Models -------
+type Trace struct {
+	Color  string `json:"color"`
+	Marker string `json:"marker"`
+}
+
 type Ammo struct {
 	Caliber     string `json:"caliber"`
 	Name        string `json:"name"`
 	Damage      int    `json:"damage"`
 	Penetration int    `json:"penetration"`
-	Price int `json:"price"`
+	Price       int    `json:"price"`
 }
 
 // ------- tarkov-tools graphQL models -------
@@ -213,7 +218,7 @@ type BSGItem struct {
 
 // Configuration
 type Config struct {
-	JSONBIN_BIN_ID string
+	JSONBIN_BIN_ID  string
 	JSONBIN_API_KEY string
 
 	TM_API_KEY string
@@ -222,10 +227,10 @@ type Config struct {
 func Handler(w http.ResponseWriter, r *http.Request) {
 	var config Config
 	err := envconfig.Process("", &config)
-    if err != nil {
-        log.Fatal(err.Error())
-    }
-	
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	// This is the map we will build of all ammo and relevant information throughout this function
 	// We will eventually write this to our data store
 	parsedAmmo := map[string]*Ammo{}
@@ -233,8 +238,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{Timeout: time.Second * 10}
 
 	// Build GraphQL query to fetch only ammo items
-    jsonValue, _ := json.Marshal(map[string]string{
-        "query": `
+	jsonValue, _ := json.Marshal(map[string]string{
+		"query": `
 			{
 				itemsByType(type: ammo) {
 					id
@@ -244,32 +249,32 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
         `,
-    })
+	})
 
 	// Fetch all ammo IDs, as well as names, short names, and icon links
-    request, _ := http.NewRequest("POST", "https://tarkov-tools.com/graphql", bytes.NewBuffer(jsonValue))
-    response, err := client.Do(request)
+	request, _ := http.NewRequest("POST", "https://tarkov-tools.com/graphql", bytes.NewBuffer(jsonValue))
+	response, err := client.Do(request)
 	if err != nil {
-        log.Printf("GraphQL request failed: %s\n", err)
-    } else {
+		log.Printf("GraphQL request failed: %s\n", err)
+	} else {
 		log.Println("succesfully fetched ammo IDs")
 	}
-    defer response.Body.Close()
+	defer response.Body.Close()
 
-    data, _ := ioutil.ReadAll(response.Body)
+	data, _ := ioutil.ReadAll(response.Body)
 	graphQLResp := &GraphQLResponse{}
 	json.Unmarshal(data, graphQLResp)
 
 	// Fetch current pen/damage data from BSG API
-	request, err = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/bsg/items/all", nil)
+	request, _ = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/bsg/items/all", nil)
 	request.Header.Set("x-api-key", config.TM_API_KEY)
-    response, err = client.Do(request)
+	response, err = client.Do(request)
 	if err != nil || response.StatusCode != http.StatusOK {
 		log.Fatalf("failed to fetch pen/damage data. Code: %d", response.StatusCode)
 	} else {
 		log.Println("succesfully fetched pen/damage data")
 	}
-    data, _ = ioutil.ReadAll(response.Body)
+	data, _ = ioutil.ReadAll(response.Body)
 
 	var f interface{}
 	err = json.Unmarshal(data, &f)
@@ -290,27 +295,26 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		if !strings.Contains(result.Props.Name, "grenade") && !strings.Contains(result.Props.Name, "pack") {
 			// Initialize the final map with BSG data
 			parsedAmmo[item.ID] = &Ammo{
-				Caliber: result.Props.Caliber,
-				Name: result.Props.ShortName,
-				Damage: result.Props.Damage,
+				Caliber:     result.Props.Caliber,
+				Name:        result.Props.ShortName,
+				Damage:      result.Props.Damage,
 				Penetration: result.Props.PenetrationPower,
 			}
 		}
 	}
 
-
-	// Fetch current prices of all items and parse. 
-	// Other option would be to fetch all 100+ ammo types individually, no thanks. 
+	// Fetch current prices of all items and parse.
+	// Other option would be to fetch all 100+ ammo types individually, no thanks.
 	// Also no option to fetch only ammo items via this API :(
-	request, err = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/items/all", nil)
+	request, _ = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/items/all", nil)
 	request.Header.Set("x-api-key", config.TM_API_KEY)
-    response, err = client.Do(request)
+	response, err = client.Do(request)
 	if err != nil || response.StatusCode != http.StatusOK {
 		log.Fatalf("failed to fetch ammo prices. Code: %d", response.StatusCode)
 	} else {
 		log.Println("succesfully fetched ammo prices")
 	}
-    data, _ = ioutil.ReadAll(response.Body)
+	data, _ = ioutil.ReadAll(response.Body)
 
 	var fleaMarketData TarkovMarketItems
 	err = json.Unmarshal(data, &fleaMarketData)
@@ -326,11 +330,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			parsedAmmo[item.BsgID].Price = item.Avg24HPrice
 		}
 	}
-	
+
 	parsedJSON, err := json.Marshal(parsedAmmo)
-    if err != nil {
+	if err != nil {
 		log.Fatal("error marshalling JSON: ", err)
-    }
+	}
 
 	// Post the resulting JSON to jsonbin.io. We will probably want to store this in a more
 	// mature data store (DynamoDB) in the future, but for now this is a good tool for rapid

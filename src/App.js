@@ -60,9 +60,7 @@ function App() {
       config={{displayModeBar: false}}
       data={traces}
       layout={{
-        xaxis: {
-            title: "damage",
-          },
+        paper_bgcolor:"rgb(240,240,240)",
         height: 1200,
         width: 1200,
         title: `Tarkov Ammo: Damage/Penetration/Price`,
