@@ -11,4 +11,4 @@ jobs:
         run: |
           curl --request GET \
           --url 'https://tarkovammo3d.com/api/update_ammo' \
-          --header 'X-Update-Ammo-API-Key: ${{ serets.UPDATE_AMMO_API_KEY }}'
+          --header 'X-Update-Ammo-API-Key: ${{ secrets.UPDATE_AMMO_API_KEY }}'

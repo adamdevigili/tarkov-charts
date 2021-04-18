@@ -27,9 +27,6 @@ function App() {
 
   console.log(appState.ammoData)
 
-  const traceColorList = ['red', 'blue', 'green', 'purple']
-  const markerSymbolList = []
-
   // appState.ammoData
   let finalTraces
   if (appState.ammoData) {
