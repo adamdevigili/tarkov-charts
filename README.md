@@ -10,7 +10,7 @@ There are plenty of ammo charts that currently exist ([tarkov-tools](https://tar
 
 <h2>Tech</h2>
 
-- [Vercel](https://vercel.com/) to for hosting/secret management
+- [Vercel](https://vercel.com/) to for hosting/CD/secret management
 - [React](https://reactjs.org/)/[PlotlyJS for React](https://plotly.com/javascript/react/)
 - [Go](https://golang.org/) for lambda function to maintain data store
 - [tarkov-tools.com](https://tarkov-tools.com/) GraphQL API for internal ammo IDs (so we don't have to hardcode & update when new ammo types get added)

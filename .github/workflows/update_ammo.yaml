@@ -1,0 +1,14 @@
+name: update-ammo-cron
+on:
+  schedule:
+    - cron: '*/60 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Cron to update data store called"
+      - name: Call the API to update data store
+        run: |
+          curl --request GET \
+          --url 'https://tarkovammo3d.com/api/update_ammo' \
+          --header 'X-Update-Ammo-API-Key: ${{ serets.UPDATE_AMMO_API_KEY }}'

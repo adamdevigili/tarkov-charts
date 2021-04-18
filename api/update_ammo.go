@@ -14,12 +14,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-// ------- TA3D Models -------
-type Trace struct {
-	Color  string `json:"color"`
-	Marker string `json:"marker"`
-}
-
 type Ammo struct {
 	Caliber     string `json:"caliber"`
 	Name        string `json:"name"`
@@ -216,12 +210,16 @@ type BSGItem struct {
 	Proto  string `mapstructure:"_proto"`
 }
 
-// Configuration
+// Configuration to be filled by envconfig
 type Config struct {
 	JSONBIN_BIN_ID  string
 	JSONBIN_API_KEY string
 
 	TM_API_KEY string
+
+	UPDATE_AMMO_API_KEY string
+
+	VERCEL_ENV string
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -229,6 +227,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	err := envconfig.Process("", &config)
 	if err != nil {
 		log.Fatal(err.Error())
+	}
+
+	if config.VERCEL_ENV != "development" {
+		if r.Header.Get("X-Update-Ammo-API-Key") != config.UPDATE_AMMO_API_KEY {
+			fmt.Fprint(w, "not authorized")
+			return
+		}
 	}
 
 	// This is the map we will build of all ammo and relevant information throughout this function
