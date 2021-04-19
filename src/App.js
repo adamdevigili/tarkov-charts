@@ -51,7 +51,7 @@ function App() {
           range: [80, 0],
         },
         zaxis: {
-          title: "Cost (₽)",
+          title: "Cost (₽, 24hr avg.)",
           range: [0, 5000],
         }
       }
