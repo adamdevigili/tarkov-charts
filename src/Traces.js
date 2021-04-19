@@ -48,7 +48,6 @@ function createTracesFromJSON(ammoData) {
         }
 
         traces.push(trace)
-        
     }
 
     return traces
