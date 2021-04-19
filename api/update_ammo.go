@@ -235,7 +235,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	if config.VERCEL_ENV != "development" {
 		if r.Header.Get("X-Update-Ammo-API-Key") != config.UPDATE_AMMO_API_KEY {
+			log.Printf("incoming request API key invalid: %s", r.Header.Get("X-Update-Ammo-API-Key"))
 			fmt.Fprint(w, "not authorized")
+	
 			return
 		}
 	}

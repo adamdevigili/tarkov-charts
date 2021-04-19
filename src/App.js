@@ -25,8 +25,6 @@ function App() {
       });
   }, [setAppState]);
 
-  console.log(appState.ammoData)
-
   // appState.ammoData
   let finalTraces
   if (appState.ammoData) {
@@ -64,7 +62,7 @@ function App() {
   return (
     <div> 
       {appState.loading ? (
-        <div>loading</div> 
+        <div>loading...</div> 
         ):(
           plot
         )} 

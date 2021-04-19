@@ -23,7 +23,20 @@ function createTracesFromJSON(ammoData) {
             text: []
         }
 
+        let ammoArray = []
+
         for (const [_, ammo] of Object.entries(ammoData.record[caliber])) {
+            ammoArray.push(ammo)
+        }
+
+        ammoArray.sort((a,b) => {
+            if (a.penetration > b.penetration) return 1
+            if (a.penetration < b.penetration) return -1
+            return 0
+        })
+
+        // for (const [_, ammo] of Object.entries(ammoData.record[caliber])) {
+        for (const ammo of ammoArray) {
             trace.x.push(ammo.damage)
             trace.y.push(ammo.penetration)
             if (ammo.price > 5000) {
@@ -34,8 +47,8 @@ function createTracesFromJSON(ammoData) {
             trace.text.push(ammo.name)
         }
 
-        console.log(trace)
         traces.push(trace)
+        
     }
 
     return traces
