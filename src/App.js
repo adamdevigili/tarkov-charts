@@ -39,7 +39,7 @@ function App() {
       paper_bgcolor:"rgb(240,240,240)",
       height: 1200,
       width: 1200,
-      title: `Tarkov Ammo: Damage/Penetration/Price`,
+      title: `Tarkov Ammo by Caliber: Damage/Penetration/Price`,
       autosize: true,
       scene: {
         xaxis: {
@@ -51,7 +51,8 @@ function App() {
           range: [80, 0],
         },
         zaxis: {
-          title: "Cost (₽)"
+          title: "Cost (₽)",
+          range: [0, 5000],
         }
       }
     }}
@@ -64,7 +65,15 @@ function App() {
       {appState.loading ? (
         <div>loading...</div> 
         ):(
-          plot
+          <div>
+            <div>{plot}</div>
+            <div>Single-click a caliber to remove/add it to the graph</div>
+            <div>Double-click a caliber to isolate it</div>
+            <div>Left click+drag to rotate</div>
+            <div>Right click+drag to pan</div>
+            <div>Mouse wheel to zoom</div>
+            <div>Ctrl+click to add single calibers to the graph</div>
+          </div>
         )} 
     </div>
   );

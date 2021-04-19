@@ -37,6 +37,11 @@ function createTracesFromJSON(ammoData) {
 
         // for (const [_, ammo] of Object.entries(ammoData.record[caliber])) {
         for (const ammo of ammoArray) {
+            if (ammo.damage > 200) {
+                trace.x.push(200)
+            } else {
+                trace.x.push(ammo.damage)
+            }
             trace.x.push(ammo.damage)
             trace.y.push(ammo.penetration)
             if (ammo.price > 5000) {
