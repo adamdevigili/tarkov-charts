@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-// import { useEffect, useState } from 'react';
 import './App.css';
 import Plot from 'react-plotly.js';
 import createTracesFromJSON from './Traces.js'
-// import rawData from './data/ammo.json';
+
+import Spinner from 'react-bootstrap/Spinner'
 
 function App() {
   const [appState, setAppState] = useState({
@@ -63,7 +63,14 @@ function App() {
   return (
     <div> 
       {appState.loading ? (
-        <div>loading...</div> 
+        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+          <div>          
+            <Spinner animation="border" role="status">
+              <span className="sr-only"></span>
+            </Spinner>
+          </div>
+          <div>loading chart...(~5 seconds)</div> 
+        </div>
         ):(
           <div>
             <div>{plot}</div>

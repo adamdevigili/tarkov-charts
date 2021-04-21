@@ -3,8 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"bootstrap": "^4.6.0",
 		"plotly.js": "^1.58.4",
 		"react": "^16.6.1",
+		"react-bootstrap": "^1.5.2",
 		"react-dom": "^16.6.1",
 		"react-plotly.js": "^2.5.1",
 		"react-scripts": "2.1.1"
