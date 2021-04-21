@@ -4,6 +4,7 @@ import Plot from 'react-plotly.js';
 import createTracesFromJSON from './Traces.js'
 
 import Spinner from 'react-bootstrap/Spinner'
+import Menu from './components/Menu';
 
 function App() {
   const [appState, setAppState] = useState({
@@ -25,18 +26,16 @@ function App() {
       });
   }, [setAppState]);
 
-  // appState.ammoData
   let finalTraces
   if (appState.ammoData) {
     finalTraces = createTracesFromJSON(appState.ammoData)
   }
-  // const ammoTraceData = JSON.parse(appState.ammoData)
 
   const plot = <Plot
     config={{displayModeBar: false}}
     data={finalTraces}
     layout={{
-      paper_bgcolor:"rgb(240,240,240)",
+      paper_bgcolor:"rgb(230,230,230)",
       height: 1200,
       width: 1200,
       title: `Tarkov Ammo by Caliber: Damage/Penetration/Price`,
@@ -61,27 +60,33 @@ function App() {
   />
 
   return (
-    <div> 
-      {appState.loading ? (
-        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
-          <div>          
-            <Spinner animation="border" role="status">
-              <span className="sr-only"></span>
-            </Spinner>
-          </div>
-          <div>loading chart...(~5 seconds)</div> 
-        </div>
-        ):(
+    <div>
+      <div>
+        <Menu/>
+      </div>
+      <div> 
+        {appState.loading ? (
           <div>
-            <div>{plot}</div>
-            <div>Single-click a caliber to remove/add it to the graph</div>
-            <div>Double-click a caliber to isolate it</div>
-            <div>Left click+drag to rotate</div>
-            <div>Right click+drag to pan</div>
-            <div>Mouse wheel to zoom</div>
-            <div>Ctrl+click to add single calibers to the graph</div>
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+              <div>          
+                <Spinner animation="border" role="status">
+                  <span className="sr-only"></span>
+                </Spinner>
+              </div>
+            </div>
           </div>
-        )} 
+          ):(
+            <div>
+              <div>{plot}</div>
+              <div>Single-click a caliber to remove/add it to the graph</div>
+              <div>Double-click a caliber to isolate it</div>
+              <div>Left click+drag to rotate</div>
+              <div>Right click+drag to pan</div>
+              <div>Mouse wheel to zoom</div>
+              <div>Ctrl+click to add single calibers to the graph</div>
+            </div>
+          )} 
+      </div>
     </div>
   );
 }
