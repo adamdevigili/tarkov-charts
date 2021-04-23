@@ -4,6 +4,7 @@ import Plot from 'react-plotly.js';
 import createTracesFromJSON from './Traces.js'
 
 import Spinner from 'react-bootstrap/Spinner'
+import Container from 'react-bootstrap/Container'
 import Menu from './components/Menu';
 
 function App() {
@@ -76,7 +77,8 @@ function App() {
             </div>
           </div>
           ):(
-            <div>
+            <Container>
+            <div className='main-plot'>
               <div>{plot}</div>
               <div>Single-click a caliber to remove/add it to the graph</div>
               <div>Double-click a caliber to isolate it</div>
@@ -84,7 +86,8 @@ function App() {
               <div>Right click+drag to pan</div>
               <div>Mouse wheel to zoom</div>
               <div>Ctrl+click to add single calibers to the graph</div>
-            </div>
+            </div></Container>
+            
           )} 
       </div>
     </div>

@@ -8,10 +8,10 @@ function Menu() {
         <div>
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="#home">Tarkov Charts</Navbar.Brand>
-                <Nav className="mr-auto">
-                    {/* <Nav.Link href="#ammo">Ammo</Nav.Link> */}
-                    {/* <Nav.Link href="#attachments">Attachments</Nav.Link> */}
-                </Nav>
+                {/* <Nav className="mr-auto">
+                    <Nav.Link href="#ammo">Ammo</Nav.Link>
+                    <Nav.Link href="#attachments">Attachments</Nav.Link>
+                </Nav> */}
         </Navbar>
         </div>
     )

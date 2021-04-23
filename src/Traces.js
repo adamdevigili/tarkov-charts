@@ -52,6 +52,14 @@ function createTracesFromJSON(ammoData) {
             trace.text.push(ammo.name)
         }
 
+        if (caliber === "Caliber12g" || 
+            caliber === "Caliber9x18PM" ||
+            caliber === "Caliber762x25TT" ||
+            caliber === "Caliber9x21" ||
+            caliber === "Caliber20g"
+        ) {
+            trace.visible = 'legendonly'
+        }
         traces.push(trace)
     }
 
