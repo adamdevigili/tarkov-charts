@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Plot from 'react-plotly.js';
-import createTracesFromJSON from './Traces.js'
+import { createTraces3D } from './Traces.js'
 
 import Spinner from 'react-bootstrap/Spinner'
 import Container from 'react-bootstrap/Container'
 import Menu from './components/Menu';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
+import ToggleButton from 'react-bootstrap/ToggleButton'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 function App() {
   const [appState, setAppState] = useState({
     loading: false,
     ammoData: null,
+    perspective: "3d",
+    chartType: "ammo"
   });
 
   useEffect(() => {
@@ -29,7 +35,7 @@ function App() {
 
   let finalTraces
   if (appState.ammoData) {
-    finalTraces = createTracesFromJSON(appState.ammoData)
+    finalTraces = createTraces3D(appState.ammoData)
   }
 
   const plot = <Plot
@@ -39,7 +45,7 @@ function App() {
       paper_bgcolor:"rgb(230,230,230)",
       height: 1200,
       width: 1200,
-      title: `Tarkov Ammo by Caliber: Damage/Penetration/Price`,
+      title: `Ammo by Caliber: Damage/Penetration/Price`,
       autosize: true,
       scene: {
         xaxis: {
@@ -78,15 +84,29 @@ function App() {
           </div>
           ):(
             <Container>
-            <div className='main-plot'>
-              <div>{plot}</div>
-              <div>Single-click a caliber to remove/add it to the graph</div>
-              <div>Double-click a caliber to isolate it</div>
-              <div>Left click+drag to rotate</div>
-              <div>Right click+drag to pan</div>
-              <div>Mouse wheel to zoom</div>
-              <div>Ctrl+click to add single calibers to the graph</div>
-            </div></Container>
+              <div className='main-plot'>
+                <div>
+                  <ToggleButtonGroup type="radio" name="chart type" defaultValue={1}>
+                    <ToggleButton value={1} variant="dark">Ammo</ToggleButton>
+                    <ToggleButton value={2} variant="dark">Attachments</ToggleButton>
+                  </ToggleButtonGroup>
+                  <br/>
+                  <ToggleButtonGroup type="radio" name="dimensions" defaultValue={1}>
+                    <ToggleButton value={1} variant="dark">2D</ToggleButton>
+                    <ToggleButton value={2} variant="dark">3D</ToggleButton>
+                  </ToggleButtonGroup>
+                </div>
+
+
+                <div>{plot}</div>
+                <div>Single-click a caliber to remove/add it to the graph</div>
+                <div>Double-click a caliber to isolate it</div>
+                <div>Left click+drag to rotate</div>
+                <div>Right click+drag to pan</div>
+                <div>Mouse wheel to zoom</div>
+                <div>Ctrl+click to add single calibers to the graph</div>
+              </div>
+            </Container>
             
           )} 
       </div>
