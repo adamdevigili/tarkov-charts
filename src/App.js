@@ -15,10 +15,16 @@ function App() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = "https://api.jsonbin.io/v3/b/" + process.env.REACT_APP_JSONBIN_BIN_ID;
+    let endpoint = ""
+    if (process.env.REACT_APP_API_ENDPOINT == "") {
+      endpoint = "https://tarkov-charts"
+    } else {
+      endpoint = "http://localhost:3000"
+    }
+    const apiUrl = endpoint + "/api/get/ammo"
     fetch(apiUrl, {
       headers: {
-        'X-Master-Key': process.env.REACT_APP_JSONBIN_API_KEY
+        'X-Tarkov-Charts-API-Key': process.env.REACT_APP_TC_API_KEY
       }
     })
       .then((res) => res.json())

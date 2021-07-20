@@ -1,6 +1,7 @@
 function createTracesFromJSON(ammoData) {
     let traces = []
 
+
     const baseTrace = {
         type: 'scatter3d',
         mode: 'lines+markers+text',
@@ -13,7 +14,7 @@ function createTracesFromJSON(ammoData) {
             'Cost: ₽ %{z}<br>'
     }
 
-    for (const [caliber, _] of Object.entries((ammoData.record))) {
+    for (const caliber in ammoData) {
         let trace =  {
             ...baseTrace,
             name: caliber,
@@ -25,8 +26,11 @@ function createTracesFromJSON(ammoData) {
 
         let ammoArray = []
 
-        for (const [_, ammo] of Object.entries(ammoData.record[caliber])) {
-            ammoArray.push(ammo)
+        for (const ammoID in ammoData[caliber]) {
+            for (const ammo in ammoData[caliber][ammoID]) {
+                ammoArray.push(ammoData[caliber][ammoID])
+            }
+
         }
 
         ammoArray.sort((a,b) => {
