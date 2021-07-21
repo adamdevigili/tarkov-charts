@@ -205,10 +205,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer mongoClient.Disconnect(ctx)
-
-	// ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second); defer cancel()
 
 	if err = mongoClient.Ping(ctx, readpref.Primary()); err != nil {
         log.Fatal(err)
@@ -216,14 +213,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 
 	log.Print("successfully connected to database")
 
-
 	items := mongoClient.Database(config.MONGO_DB_NAME).Collection("ammo")
-
-	
-	// parsedBSON, err := bson.Marshal(ammoByCaliber)
-	// if err != nil {
-	// 	log.Fatal("error marshalling BSON", err)
-	// }
 
 	log.Print("attempting to write updated data to database")
 
