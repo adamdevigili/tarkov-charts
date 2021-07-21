@@ -19,7 +19,7 @@ function App() {
     if (process.env.REACT_APP_API_ENDPOINT) {
       endpoint = process.env.REACT_APP_API_ENDPOINT
     } else {
-      endpoint = "https://tarkov-charts"
+      endpoint = "https://tarkov-charts.com"
     }
     const apiUrl = endpoint + "/api/get/ammo"
     fetch(apiUrl, {
