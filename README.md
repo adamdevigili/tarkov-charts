@@ -15,5 +15,5 @@ There are plenty of ammo charts that currently exist ([tarkov-tools](https://tar
 - [Go](https://golang.org/) for lambda function to maintain data store
 - [tarkov-tools.com](https://tarkov-tools.com/) GraphQL API for internal ammo IDs (so we don't have to hardcode & update when new ammo types get added)
 - [tarkov-market.com](https://tarkov-market.com/) REST API for price data
-- [jsonbin](https://jsonbin.io/) to store JSON data
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to store JSON data
 - [GitHub Actions](https://github.com/features/actions) to periodically call Go lambda function to update data store

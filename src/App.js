@@ -16,10 +16,10 @@ function App() {
   useEffect(() => {
     setAppState({ loading: true });
     let endpoint = ""
-    if (process.env.REACT_APP_API_ENDPOINT == "") {
-      endpoint = "https://tarkov-charts"
+    if (process.env.REACT_APP_API_ENDPOINT) {
+      endpoint = process.env.REACT_APP_API_ENDPOINT
     } else {
-      endpoint = "http://localhost:3000"
+      endpoint = "https://tarkov-charts"
     }
     const apiUrl = endpoint + "/api/get/ammo"
     fetch(apiUrl, {
