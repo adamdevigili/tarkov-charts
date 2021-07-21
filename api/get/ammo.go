@@ -90,11 +90,11 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("error fetching from database", err)
 	}
 
-	log.Printf("successfully fetched data: %+v", ammo)
+	log.Printf("successfully fetched data")
 
 	w.WriteHeader(http.StatusOK)
 
-	json.NewEncoder(w).Encode(ammo["data"])
+	json.NewEncoder(w).Encode(ammo)
 	// jsonString, _ := json.Marshal(ammo["data"])
 	// fmt.Fprint(w, string(jsonString))
 }

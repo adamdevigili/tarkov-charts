@@ -232,7 +232,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 		bson.M{"_name": "ammo_data"},
 		bson.D{
 			{"_name", "ammo_data"},
-			{"_updated_at", time.Now()}, 
+			{"_updated_at", time.Now().Format(time.RFC822)}, 
 			{"data", ammoByCaliber}})
 	if err != nil {
 		log.Fatal("error writing to database", err)

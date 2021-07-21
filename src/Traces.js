@@ -14,6 +14,8 @@ function createTracesFromJSON(ammoData) {
             'Cost: ₽ %{z}<br>'
     }
 
+    ammoData = ammoData["data"]
+
     for (const caliber in ammoData) {
         let trace =  {
             ...baseTrace,
@@ -60,6 +62,9 @@ function createTracesFromJSON(ammoData) {
             caliber === "Caliber9x18PM" ||
             caliber === "Caliber762x25TT" ||
             caliber === "Caliber9x21" ||
+            caliber === "Caliber30x29" ||
+            caliber === "Caliber366TKM" ||
+            caliber === "Caliber762x35" ||
             caliber === "Caliber20g"
         ) {
             trace.visible = 'legendonly'

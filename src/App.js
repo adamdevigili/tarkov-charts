@@ -34,8 +34,10 @@ function App() {
   }, [setAppState]);
 
   let finalTraces
+  let updatedAt
   if (appState.ammoData) {
     finalTraces = createTracesFromJSON(appState.ammoData)
+    updatedAt = appState.ammoData["_updated_at"]
   }
 
   const plot = <Plot
@@ -45,7 +47,7 @@ function App() {
       paper_bgcolor:"rgb(230,230,230)",
       height: 1200,
       width: 1200,
-      title: `Tarkov Ammo by Caliber: Damage/Penetration/Price`,
+      title: `Tarkov Ammo by Caliber: Damage/Penetration/Price (last updated ` + updatedAt + `)`,
       autosize: true,
       scene: {
         xaxis: {
