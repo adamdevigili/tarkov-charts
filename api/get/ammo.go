@@ -94,6 +94,9 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
+	// Cache response in CDN for 30 minutes
+	w.Header().Set("Cache-Control", "s-maxage=1800")
+
 	json.NewEncoder(w).Encode(ammo)
 	// jsonString, _ := json.Marshal(ammo["data"])
 	// fmt.Fprint(w, string(jsonString))
