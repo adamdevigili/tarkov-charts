@@ -1,0 +1,181 @@
+{
+    "_id": "60f5fc097c37e9a5ee47a69e",
+    "_name": "ammo_data",
+    "_updated_at": "26 Jul 21 22:02 UTC",
+    "data": {
+        "Caliber1143x23ACP": {
+            "5e81f423763d9f754677bf2e": {
+                "caliber": "Caliber1143x23ACP",
+                "damage": 69,
+                "name": "FMJ",
+                "penetration": 23,
+                "price": 210
+            },
+            "5ea2a8e200685063ec28c05a": {
+                "caliber": "Caliber1143x23ACP",
+                "damage": 127,
+                "name": "RIP",
+                "penetration": 3,
+                "price": 639
+            },
+            "5efb0cabfb3e451d70735af5": {
+                "caliber": "Caliber1143x23ACP",
+                "damage": 70,
+                "name": "AP",
+                "penetration": 36,
+                "price": 985
+            },
+            "5efb0d4f4bc50b58e81710f3": {
+                "caliber": "Caliber1143x23ACP",
+                "damage": 74,
+                "name": "LM",
+                "penetration": 19,
+                "price": 130
+            },
+            "5efb0fc6aeb21837e749c801": {
+                "caliber": "Caliber1143x23ACP",
+                "damage": 95,
+                "name": "HS",
+                "penetration": 13,
+                "price": 373
+            }
+        },
+        "Caliber127x55": {
+            "5cadf6ddae9215051e1c23b2": {
+                "caliber": "Caliber127x55",
+                "damage": 115,
+                "name": "PS12",
+                "penetration": 28,
+                "price": 346
+            },
+            "5cadf6e5ae921500113bb973": {
+                "caliber": "Caliber127x55",
+                "damage": 165,
+                "name": "PS12A",
+                "penetration": 10,
+                "price": 153
+            },
+            "5cadf6eeae921500134b2799": {
+                "caliber": "Caliber127x55",
+                "damage": 102,
+                "name": "PS12B",
+                "penetration": 46,
+                "price": 914
+            }
+        },
+        "Caliber12g": {
+            "560d5e524bdc2d25448b4571": {
+                "caliber": "Caliber12g",
+                "damage": 39,
+                "name": "7mm",
+                "penetration": 3,
+                "price": 30
+            },
+            "58820d1224597753c90aeb13": {
+                "caliber": "Caliber12g",
+                "damage": 167,
+                "name": "Slug",
+                "penetration": 15,
+                "price": 56
+            },
+            "5c0d591486f7744c505b416f": {
+                "caliber": "Caliber12g",
+                "damage": 265,
+                "name": "RIP",
+                "penetration": 2,
+                "price": 317
+            },
+            "5d6e6772a4b936088465b17c": {
+                "caliber": "Caliber12g",
+                "damage": 37,
+                "name": "5.25mm",
+                "penetration": 1,
+                "price": 125
+            },
+            "5d6e67fba4b9361bc73bc779": {
+                "caliber": "Caliber12g",
+                "damage": 35,
+                "name": "Express",
+                "penetration": 3,
+                "price": 127
+            },
+            "5d6e6806a4b936088465b17e": {
+                "caliber": "Caliber12g",
+                "damage": 50,
+                "name": "Magnum",
+                "penetration": 2,
+                "price": 109
+            },
+            "5d6e6869a4b9361c140bcfde": {
+                "caliber": "Caliber12g",
+                "damage": 190,
+                "name": "Grizzly",
+                "penetration": 12,
+                "price": 70
+            },
+            "5d6e6891a4b9361bd473feea": {
+                "caliber": "Caliber12g",
+                "damage": 140,
+                "name": "Poleva-3",
+                "penetration": 17,
+                "price": 154
+            },
+            "5d6e689ca4b9361bc8618956": {
+                "caliber": "Caliber12g",
+                "damage": 150,
+                "name": "Poleva-6u",
+                "penetration": 20,
+                "price": 290
+            },
+            "5d6e68a8a4b9360b6c0d54e2": {
+                "caliber": "Caliber12g",
+                "damage": 164,
+                "name": "AP-20",
+                "penetration": 37,
+                "price": 1129
+            },
+            "5d6e68b3a4b9361bca7e50b5": {
+                "caliber": "Caliber12g",
+                "damage": 206,
+                "name": "CSP",
+                "penetration": 14,
+                "price": 370
+            },
+            "5d6e68c4a4b9361b93413f79": {
+                "caliber": "Caliber12g",
+                "damage": 197,
+                "name": "CSP",
+                "penetration": 26,
+                "price": 910
+            },
+            "5d6e68d1a4b93622fe60e845": {
+                "caliber": "Caliber12g",
+                "damage": 220,
+                "name": "SFormance",
+                "penetration": 5,
+                "price": 210
+            },
+            "5d6e68dea4b9361bcc29e659": {
+                "caliber": "Caliber12g",
+                "damage": 85,
+                "name": "DualSabot",
+                "penetration": 17,
+                "price": 184
+            },
+            "5d6e68e6a4b9361c140bcfe0": {
+                "caliber": "Caliber12g",
+                "damage": 183,
+                "name": "FTX",
+                "penetration": 20,
+                "price": 313
+            },
+            "5d6e6911a4b9361bd5780d52": {
+                "caliber": "Caliber12g",
+                "damage": 25,
+                "name": "Flechette",
+                "penetration": 31,
+                "price": 353
+            }
+        }
+    }
+}

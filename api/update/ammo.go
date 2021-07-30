@@ -46,9 +46,9 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	parsedAmmo := map[string]*Ammo{}
 	ammoByCaliber := map[string]map[string]*Ammo{}
 
-	client := &http.Client{Timeout: time.Second * 10}
+	client := &http.Client{Timeout: time.Second * 5}
 
-	// Build GraphQL query to fetch only ammo items
+	// Build GraphQL query to fetch only ammo items and their prices
 	jsonValue, _ := json.Marshal(map[string]string{
 		"query": `
 			{
@@ -57,6 +57,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 					name
 					shortName
 					iconLink
+					avg24hPrice
 				}
 			}
         `,
@@ -165,30 +166,31 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	/*
-	JSONBin integration deprecated. Leaving for later reference or...something 
+
+	JSONBin integration deprecated, moved to MongoDB. Leaving for later reference or...something 
+
+	Post the resulting JSON to jsonbin.io. We will probably want to store this in a more
+	mature data store (DynamoDB) in the future, but for now this is a good tool for rapid
+	development
+
+
+	binID := config.JSONBIN_BIN_ID
+	binAPIKEY := config.JSONBIN_API_KEY
+	binURL := fmt.Sprintf("https://api.jsonbin.io/v3/b/%s", binID)
+
+	req, _ := http.NewRequest(http.MethodPut, binURL, bytes.NewBuffer(parsedJSON))
+	req.Header.Set("X-Master-Key", binAPIKEY)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil || response.StatusCode != http.StatusOK {
+		log.Fatalf("failed to write to the data store. Code: %d", response.StatusCode)
+	} else {
+		log.Println("succesfully wrote to the data store")
+	}
+	defer resp.Body.Close()
+
 	*/
-
-	// Post the resulting JSON to jsonbin.io. We will probably want to store this in a more
-	// mature data store (DynamoDB) in the future, but for now this is a good tool for rapid
-	// development
-
-
-	// binID := config.JSONBIN_BIN_ID
-	// binAPIKEY := config.JSONBIN_API_KEY
-	// binURL := fmt.Sprintf("https://api.jsonbin.io/v3/b/%s", binID)
-
-	// req, _ := http.NewRequest(http.MethodPut, binURL, bytes.NewBuffer(parsedJSON))
-	// req.Header.Set("X-Master-Key", binAPIKEY)
-	// req.Header.Set("Content-Type", "application/json")
-
-	// resp, err := client.Do(req)
-	// if err != nil || response.StatusCode != http.StatusOK {
-	// 	log.Fatalf("failed to write to the data store. Code: %d", response.StatusCode)
-	// } else {
-	// 	log.Println("succesfully wrote to the data store")
-	// }
-	// defer resp.Body.Close()
-
 
 
 	clientOptions := options.Client().ApplyURI(fmt.Sprintf(

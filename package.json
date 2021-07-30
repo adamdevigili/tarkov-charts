@@ -11,7 +11,8 @@
 		"react-dom": "^16.6.1",
 		"react-plotly.js": "^2.5.1",
 		"react-router-dom": "^5.2.0",
-		"react-scripts": "2.1.1"
+		"react-scripts": "2.1.1",
+		"react-split-pane": "^0.1.92"
 	},
 	"scripts": {
 		"dev": "react-scripts start",
