@@ -2,7 +2,7 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=tarkov-ammo-3d)
 
-[**tarkov-charts**](https://www.tarkov-charts.com/) is a web application that provides a veriety of graphs that relates live data about ammounition types, attachments, and other items in the game [Escape From Tarkov](https://www.escapefromtarkov.com/). 
+[**tarkov-charts**](https://www.tarkov-charts.com/) is a web application that provides a variety of graphs that relates live data about ammounition types, attachments, and other items in the game [Escape From Tarkov](https://www.escapefromtarkov.com/). 
 
 Currently, the only graph is the [penetration, damage](https://escapefromtarkov.fandom.com/wiki/Ballistics#Armor_penetration_tables), and the cost of a single round type. These rounds are grouped by caliber, as all rounds in each caliber will have a similar "slope", usually the round with the highest penetration doing the least amount of damage, while also being the most expensive.
 
