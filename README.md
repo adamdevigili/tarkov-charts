@@ -17,3 +17,5 @@ There are plenty of ammo charts that currently exist ([tarkov-tools](https://tar
 - [tarkov-market.com](https://tarkov-market.com/) REST API for price data
 - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to store JSON data
 - [GitHub Actions](https://github.com/features/actions) to periodically call Go lambda function to update data store
+
+[Lucidchart architecture diagram](https://lucid.app/lucidchart/invitations/accept/inv_30a42228-7a51-46c3-b983-e0d3dabc045a?viewport_loc=-89%2C-87%2C1558%2C1360%2C0_0)
