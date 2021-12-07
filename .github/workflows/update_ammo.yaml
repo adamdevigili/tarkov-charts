@@ -9,6 +9,6 @@ jobs:
       - run: echo "Cron to update data store called"
       - name: Call the update API to update data store
         run: |
-          curl --request GET \
-          --url 'https://www.tarkov-charts.com/api/update/ammo' \
+          curl -X PUT \
+          --url 'https://www.tarkov-charts.com/api/ammo' \
           --header 'X-Tarkov-Charts-API-Key: ${{ secrets.TC_API_KEY }}'

@@ -8,10 +8,12 @@ function createTracesFromJSON(ammoData) {
         textposition: 'top center',
         marker: {size: 3},
         hovertemplate:
+            '<extra></extra>' +
             '<b><i>%{text}</i></b><br>' +
             'Damage: %{x}<br>' +
             'Pen: %{y}<br>' +
             'Cost: ₽ %{z}<br>'
+
     }
 
     ammoData = ammoData["data"]

@@ -21,7 +21,7 @@ function App() {
     } else {
       endpoint = "https://www.tarkov-charts.com"
     }
-    const apiUrl = endpoint + "/api/get/ammo"
+    const apiUrl = endpoint + "/api/ammo"
     fetch(apiUrl, {
       headers: {
         'X-Tarkov-Charts-API-Key': process.env.REACT_APP_TC_API_KEY
