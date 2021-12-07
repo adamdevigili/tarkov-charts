@@ -5,12 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"strings"
-	"time"
-
 	. "github.com/adamdevigili/tarkov-charts-models"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/mitchellh/mapstructure"
@@ -18,6 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
+	"time"
 )
 
 func AmmoHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,10 +36,6 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err.Error())
 	}
 
-	if config.VERCEL_ENV == "development" {
-		log.Printf("%+v\n", config)
-	}
-
 	if config.VERCEL_ENV != "development" {
 		if r.Header.Get(APIKeyHeader) != config.TC_API_KEY {
 			log.Printf("incoming request API key invalid: %s", r.Header.Get(APIKeyHeader))
@@ -48,6 +43,8 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 
 			return
 		}
+	} else {
+		log.Printf("%+v\n", config)
 	}
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -106,7 +103,7 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// Cache response in CDN for 30 minutes
-	w.Header().Set("Cache-Control", "s-maxage=1800")
+	// w.Header().Set("Cache-Control", "s-maxage=1800")
 
 	json.NewEncoder(w).Encode(ammo)
 	// jsonString, _ := json.Marshal(ammo["data"])
@@ -137,7 +134,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 
 	// This is the map we will build of all ammo and relevant information throughout this function
 	// We will eventually write this to our data store
-	parsedAmmo := map[string]*Ammo{}
+	// parsedAmmo := map[string]*Ammo{}
 	ammoByCaliber := map[string]map[string]*Ammo{}
 
 	client := &http.Client{Timeout: time.Second * 10}
@@ -151,12 +148,13 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 					name
 					shortName
 					iconLink
+					avg24hPrice
 				}
 			}
         `,
 	})
 
-	// Fetch all ammo IDs, as well as names, short names, and icon links
+	// Fetch all ammo IDs, as well as names, short names, icon links, and average 24hr price
 	request, _ := http.NewRequest("POST", "https://tarkov-tools.com/graphql", bytes.NewBuffer(query))
 	response, err := client.Do(request)
 	if err != nil {
@@ -171,14 +169,15 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(data, graphQLResp)
 
 	// Fetch current pen/damage data from BSG API
-	request, _ = http.NewRequest(http.MethodGet, "https://tarkov-market.com/api/v1/bsg/items/all", nil)
-	request.Header.Set("x-api-key", config.TM_API_KEY)
+
+	request, _ = http.NewRequest(http.MethodGet, "https://raw.githack.com/TarkovTracker/tarkovdata/master/ammunition.json", nil)
 	response, err = client.Do(request)
 	if err != nil || response.StatusCode != http.StatusOK {
 		log.Fatalf("failed to fetch pen/damage data. Code: %d", response.StatusCode)
 	} else {
-		log.Println("succesfully fetched pen/damage data")
+		log.Println("successfully fetched pen/damage data")
 	}
+
 	data, _ = ioutil.ReadAll(response.Body)
 
 	var f interface{}
@@ -187,9 +186,9 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("error parsing JSON: ", err)
 	}
 
-	// Need to do some Go magic to consume the BSG API properly. Also leverage the mapstructure package
+	// Need to do some Go magic to consume the TarkovTracker JSON properly. Also leverage the mapstructure package
 	itemsMap := f.(map[string]interface{})
-	var result BSGItem
+	var result TarkovTrackerAmmo
 	for _, item := range graphQLResp.Data.ItemsByType {
 		err = mapstructure.Decode(itemsMap[item.ID], &result)
 		if err != nil {
@@ -197,29 +196,32 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// When querying for ammo types, we currently get grenades and ammo boxes. Ignore them
-		if !strings.Contains(result.Props.Name, "grenade") &&
-			!strings.Contains(result.Props.Name, "pack") &&
-			!strings.Contains(result.Props.Caliber, "Caliber40x46") {
+		if !strings.Contains(result.Name, "grenade") &&
+			!strings.Contains(result.Name, "pack") &&
+			!strings.Contains(result.Caliber, "Caliber40x46") {
 			// Initialize the final map with BSG data
-			parsedAmmo[item.ID] = &Ammo{
-				Caliber:     result.Props.Caliber,
-				Name:        result.Props.ShortName,
-				Damage:      result.Props.Damage,
-				Penetration: result.Props.PenetrationPower,
-			}
+			// parsedAmmo[item.ID] = &Ammo{
+			// 	Caliber:     result.Caliber,
+			// 	Name:        result.ShortName,
+			// 	Damage:      result.Ballistics.Damage,
+			// 	Penetration: result.Ballistics.PenetrationPower,
+			// 	Price: item.Avg24hPrice,
+			// }
 
-			if ammoByCaliber[result.Props.Caliber] == nil {
-				ammoByCaliber[result.Props.Caliber] = make(map[string]*Ammo)
+			if ammoByCaliber[result.Caliber] == nil {
+				ammoByCaliber[result.Caliber] = make(map[string]*Ammo)
 			}
-			ammoByCaliber[result.Props.Caliber][item.ID] = &Ammo{
-				Caliber:     result.Props.Caliber,
-				Name:        result.Props.ShortName,
-				Damage:      result.Props.Damage,
-				Penetration: result.Props.PenetrationPower,
+			ammoByCaliber[result.Caliber][item.ID] = &Ammo{
+				Caliber:     result.Caliber,
+				Name:        result.ShortName,
+				Damage:      result.Ballistics.Damage,
+				Penetration: result.Ballistics.PenetrationPower,
+				Price: item.Avg24hPrice,
 			}
 		}
 	}
 
+	/* tarkov-market integration deprecated
 	// Fetch current prices of all items and parse.
 	// Other option would be to fetch all 100+ ammo types individually, no thanks.
 	// Also no option to fetch only ammo items via this API :(
@@ -258,29 +260,31 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	/*
-		JSONBin integration deprecated. Leaving for later reference or...something
 	*/
 
-	// Post the resulting JSON to jsonbin.io. We will probably want to store this in a more
-	// mature data store (DynamoDB) in the future, but for now this is a good tool for rapid
-	// development
+	/* JSONBin integration deprecated. Leaving for later reference or...something
 
-	// binID := config.JSONBIN_BIN_ID
-	// binAPIKEY := config.JSONBIN_API_KEY
-	// binURL := fmt.Sprintf("https://api.jsonbin.io/v3/b/%s", binID)
+	Post the resulting JSON to jsonbin.io. We will probably want to store this in a more
+	mature data store (DynamoDB) in the future, but for now this is a good tool for rapid
+	development
 
-	// req, _ := http.NewRequest(http.MethodPut, binURL, bytes.NewBuffer(parsedJSON))
-	// req.Header.Set("X-Master-Key", binAPIKEY)
-	// req.Header.Set("Content-Type", "application/json")
+	binID := config.JSONBIN_BIN_ID
+	binAPIKEY := config.JSONBIN_API_KEY
+	binURL := fmt.Sprintf("https://api.jsonbin.io/v3/b/%s", binID)
 
-	// resp, err := client.Do(req)
-	// if err != nil || response.StatusCode != http.StatusOK {
-	// 	log.Fatalf("failed to write to the data store. Code: %d", response.StatusCode)
-	// } else {
-	// 	log.Println("succesfully wrote to the data store")
-	// }
-	// defer resp.Body.Close()
+	req, _ := http.NewRequest(http.MethodPut, binURL, bytes.NewBuffer(parsedJSON))
+	req.Header.Set("X-Master-Key", binAPIKEY)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil || response.StatusCode != http.StatusOK {
+		log.Fatalf("failed to write to the data store. Code: %d", response.StatusCode)
+	} else {
+		log.Println("succesfully wrote to the data store")
+	}
+	defer resp.Body.Close()
+
+	*/
 
 	clientOptions := options.Client().ApplyURI(fmt.Sprintf(
 		"mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority",

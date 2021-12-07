@@ -73,11 +73,11 @@ function App() {
       <div>
         <Menu/>
       </div>
-      <div> 
+      <div>
         {appState.loading ? (
           <div>
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
-              <div>          
+              <div>
                 <Spinner animation="border" role="status">
                   <span className="sr-only"></span>
                 </Spinner>
@@ -95,8 +95,8 @@ function App() {
               <div>Mouse wheel to zoom</div>
               <div>Ctrl+click to add single calibers to the graph</div>
             </div></Container>
-            
-          )} 
+
+          )}
       </div>
     </div>
   );
