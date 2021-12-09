@@ -29,3 +29,8 @@ a:hover {
   right: 10px;
   justify-content: end;
 }
+
+.instructions {
+  bottom: 20px;
+  position: absolute;
+}

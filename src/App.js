@@ -129,26 +129,29 @@ function App() {
                 xxl="2"
                 style={{ color: "#e6e6e6" }}
               >
-                <ul>
-                  <li>
-                    <b>Single-click</b> a caliber to remove/add it to the graph
-                  </li>
-                  <li>
-                    <b>Double-click</b> a caliber to isolate it
-                  </li>
-                  <li>
-                    <b>Left click+drag</b> to rotate
-                  </li>
-                  <li>
-                    <b>Right click+drag</b> to pan
-                  </li>
-                  <li>
-                    <b>Mouse wheel</b> to zoom
-                  </li>
-                  <li>
-                    <b>Ctrl+click</b> to add single calibers to the graph
-                  </li>
-                </ul>
+                <div className="instructions">
+                  <ul>
+                    <li>
+                      <b>Single-click</b> a caliber to remove/add it to the
+                      graph
+                    </li>
+                    <li>
+                      <b>Double-click</b> a caliber to isolate it
+                    </li>
+                    <li>
+                      <b>Left click+drag</b> to rotate
+                    </li>
+                    <li>
+                      <b>Right click+drag</b> to pan
+                    </li>
+                    <li>
+                      <b>Mouse wheel</b> to zoom
+                    </li>
+                    <li>
+                      <b>Ctrl+click</b> to add single calibers to the graph
+                    </li>
+                  </ul>
+                </div>
               </Col>
               <Col xs={true} sm={true} md={true} lg={true} xl={true} xxl={true}>
                 <div className="main-plot">{plot}</div>
