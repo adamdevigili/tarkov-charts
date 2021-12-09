@@ -5,6 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
+	"time"
+
 	. "github.com/adamdevigili/tarkov-charts-models"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/mitchellh/mapstructure"
@@ -12,11 +18,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"strings"
-	"time"
 )
 
 func AmmoHandler(w http.ResponseWriter, r *http.Request) {
@@ -213,10 +214,11 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 			}
 			ammoByCaliber[result.Caliber][item.ID] = &Ammo{
 				Caliber:     result.Caliber,
-				Name:        result.ShortName,
+				Name:        result.Name,
+				ShortName:   result.ShortName,
 				Damage:      result.Ballistics.Damage,
 				Penetration: result.Ballistics.PenetrationPower,
-				Price: item.Avg24hPrice,
+				Price:       item.Avg24hPrice,
 			}
 		}
 	}

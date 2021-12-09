@@ -1,6 +1,6 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/adamdevigili/tarkov-charts-models v1.0.2 h1:gmMFrBANdHdmAO8CwFA9/VIQUlMYuQNw5LAS0+SIc2Q=
-github.com/adamdevigili/tarkov-charts-models v1.0.2/go.mod h1:xIzFEe0Jux7wJpgikuaX/+3ZLmhWRdBMXNFx+n1SLYQ=
+github.com/adamdevigili/tarkov-charts-models v1.0.3 h1:1lrE9o+K77S1a4yTIVyfydA5t8uQPvBkknZtuoGlLqQ=
+github.com/adamdevigili/tarkov-charts-models v1.0.3/go.mod h1:xIzFEe0Jux7wJpgikuaX/+3ZLmhWRdBMXNFx+n1SLYQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
