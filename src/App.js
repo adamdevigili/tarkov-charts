@@ -97,7 +97,7 @@ function App() {
   return (
     <div style={{ backgroundColor: "#262626", height: "100vh" }}>
       <div>
-        <TCNavbar />
+        <TCNavbar releaseVersion={releaseVersion} />
       </div>
       <div>
         {appState.loading ? (
@@ -120,7 +120,15 @@ function App() {
         ) : (
           <Container fluid className="gx-0">
             <Row className="gx-0">
-              <Col style={{ color: "#e6e6e6" }}>
+              <Col
+                xs="2"
+                sm="2"
+                md="2"
+                lg="2"
+                xl="2"
+                xxl="2"
+                style={{ color: "#e6e6e6" }}
+              >
                 <ul>
                   <li>
                     <b>Single-click</b> a caliber to remove/add it to the graph
@@ -142,23 +150,10 @@ function App() {
                   </li>
                 </ul>
               </Col>
-              <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto" xxl="auto">
-                <div className="main-plot"> </div>
-                <div>{plot}</div>
+              <Col xs={true} sm={true} md={true} lg={true} xl={true} xxl={true}>
+                <div className="main-plot">{plot}</div>
               </Col>
-              <Col className="justify-content-end">
-                <div className="release-version">
-                  <a
-                    href={
-                      "https://github.com/adamdevigili/tarkov-charts/releases/tag/" +
-                      releaseVersion
-                    }
-                    rel="noreferrer"
-                  >
-                    {releaseVersion}
-                  </a>
-                </div>
-              </Col>
+              <Col xs="2" sm="2" md="2" lg="2" xl="2" xxl="2"></Col>
             </Row>
           </Container>
         )}
