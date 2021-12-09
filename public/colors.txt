@@ -1,0 +1,4 @@
+9a8866 - Gold
+020202 - Background
+262626 - Dark Gray
+e6e6e6 - Light Gray

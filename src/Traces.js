@@ -13,13 +13,12 @@ function createTracesFromJSON(ammoData) {
             'Damage: %{x}<br>' +
             'Pen: %{y}<br>' +
             'Cost: ₽ %{z}<br>'
-
     }
 
     ammoData = ammoData["data"]
 
     for (const caliber in ammoData) {
-        let trace =  {
+        let trace = {
             ...baseTrace,
             name: caliber,
             x:[],
@@ -31,12 +30,15 @@ function createTracesFromJSON(ammoData) {
         let ammoArray = []
 
         for (const ammoID in ammoData[caliber]) {
-            for (const ammo in ammoData[caliber][ammoID]) {
+            for (const _ in ammoData[caliber][ammoID]) {
                 ammoArray.push(ammoData[caliber][ammoID])
             }
-
         }
 
+        console.log(ammoArray[0])
+
+        let ammoName = ammoArray[0].name
+        trace.name = ammoName.substr(0, ammoName.indexOf(' ')).replace("mm", "");
         ammoArray.sort((a,b) => {
             if (a.penetration > b.penetration) return 1
             if (a.penetration < b.penetration) return -1
@@ -57,7 +59,7 @@ function createTracesFromJSON(ammoData) {
             } else {
                 trace.z.push(ammo.price)
             }
-            trace.text.push(ammo.name)
+            trace.text.push(ammo.shortname)
         }
 
         if (caliber === "Caliber12g" || 

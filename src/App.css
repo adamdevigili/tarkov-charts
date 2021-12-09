@@ -1,9 +1,17 @@
+@font-face {
+  font-family: "Bender";
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Bender Regular'), url("./fonts/Bender.woff2") format("woff2");
+}
+
 main {
   /* align-content: center; */
   box-sizing: border-box;
   /* display: grid; */
-  font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
-    'Arial', sans-serif;
+  /* font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; */
+  font-family: Bender, Arial, serif;
   hyphens: auto;
   line-height: 1.65;
   margin: 0 auto;

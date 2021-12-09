@@ -1,9 +1,19 @@
+@font-face {
+  font-family: "Bender";
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Bender Regular'), url("./fonts/Bender.woff2") format("woff2");
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
+
+  font-family: "Bender", "sans serif";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
