@@ -191,36 +191,36 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	itemsMap := f.(map[string]interface{})
 	var result TarkovTrackerAmmo
 	for _, item := range graphQLResp.Data.ItemsByType {
+		if strings.Contains(item.Name, "grenade") {
+			continue
+		}
+
 		err = mapstructure.Decode(itemsMap[item.ID], &result)
 		if err != nil {
 			log.Print("mapstructure error: ", err, item)
 		}
 
-		// When querying for ammo types, we currently get grenades and ammo boxes. Ignore them
-		if !strings.Contains(result.Name, "grenade") &&
-			!strings.Contains(result.Name, "pack") &&
-			!strings.Contains(result.Caliber, "Caliber40x46") {
-			// Initialize the final map with BSG data
-			// parsedAmmo[item.ID] = &Ammo{
-			// 	Caliber:     result.Caliber,
-			// 	Name:        result.ShortName,
-			// 	Damage:      result.Ballistics.Damage,
-			// 	Penetration: result.Ballistics.PenetrationPower,
-			// 	Price: item.Avg24hPrice,
-			// }
+		// Initialize the final map with BSG data
+		// parsedAmmo[item.ID] = &Ammo{
+		// 	Caliber:     result.Caliber,
+		// 	Name:        result.ShortName,
+		// 	Damage:      result.Ballistics.Damage,
+		// 	Penetration: result.Ballistics.PenetrationPower,
+		// 	Price: item.Avg24hPrice,
+		// }
 
-			if ammoByCaliber[result.Caliber] == nil {
-				ammoByCaliber[result.Caliber] = make(map[string]*Ammo)
-			}
-			ammoByCaliber[result.Caliber][item.ID] = &Ammo{
-				Caliber:     result.Caliber,
-				Name:        result.Name,
-				ShortName:   result.ShortName,
-				Damage:      result.Ballistics.Damage,
-				Penetration: result.Ballistics.PenetrationPower,
-				Price:       item.Avg24hPrice,
-			}
+		if ammoByCaliber[result.Caliber] == nil {
+			ammoByCaliber[result.Caliber] = make(map[string]*Ammo)
 		}
+		ammoByCaliber[result.Caliber][item.ID] = &Ammo{
+			Caliber:     result.Caliber,
+			Name:        result.Name,
+			ShortName:   result.ShortName,
+			Damage:      result.Ballistics.Damage,
+			Penetration: result.Ballistics.PenetrationPower,
+			Price:       item.Avg24hPrice,
+		}
+
 	}
 
 	/* tarkov-market integration deprecated

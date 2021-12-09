@@ -67,10 +67,20 @@ function createTracesFromJSON(ammoData) {
             caliber === "Caliber30x29" ||
             caliber === "Caliber366TKM" ||
             caliber === "Caliber762x35" ||
+            caliber === "Caliber1143x23ACP" ||
+            caliber === "Caliber127x108" ||
+            caliber === "Caliber23x75" ||
+            caliber === "Caliber127x55" ||
+            caliber === "Caliber545x39" ||
+            caliber === "Caliber57x28" ||
+            caliber === "Caliber762x54R" ||
+            caliber === "Caliber86x70" ||
+            caliber === "Caliber40x46" ||
             caliber === "Caliber20g"
         ) {
             trace.visible = 'legendonly'
         }
+        
         traces.push(trace)
     }
 
