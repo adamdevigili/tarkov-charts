@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -14,6 +13,7 @@ import (
 	. "github.com/adamdevigili/tarkov-charts-models"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/mitchellh/mapstructure"
+	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -34,21 +34,20 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	var config Config
 	err := envconfig.Process("", &config)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal().Err(err).Msg("could not process environment variables")
 	}
 
 	if config.VERCEL_ENV != "development" {
 		if r.Header.Get(APIKeyHeader) != config.TC_API_KEY {
-			log.Printf("incoming request API key invalid: %s", r.Header.Get(APIKeyHeader))
+			log.Warn().Msgf("incoming request API key invalid: %s", r.Header.Get(APIKeyHeader))
 			fmt.Fprint(w, "not authorized")
+			w.WriteHeader(http.StatusUnauthorized)
 
 			return
 		}
 	} else {
-		log.Printf("%+v\n", config)
+		log.Info().Msgf("%+v\n", config)
 	}
-
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// This is the map we will build of all ammo and relevant information throughout this function
 	// We will eventually write this to our data store
@@ -68,7 +67,7 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 
 	mongoClient, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("could not connect to database")
 	}
 
 	defer mongoClient.Disconnect(ctx)
@@ -76,10 +75,10 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	// ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second); defer cancel()
 
 	if err = mongoClient.Ping(ctx, readpref.Primary()); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("could not ping database")
 	}
 
-	log.Print("successfully connected to database")
+	log.Info().Msg("successfully connected to database, attempting to read")
 
 	items := mongoClient.Database(config.MONGO_DB_NAME).Collection("ammo")
 
@@ -88,50 +87,44 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	// 	log.Fatal("error marshalling BSON", err)
 	// }
 
-	log.Print("attempting to read from database")
-
 	var ammo bson.M
 	err = items.FindOne(
 		ctx,
 		bson.M{"_name": "ammo_data"},
 	).Decode(&ammo)
 	if err != nil {
-		log.Fatal("error fetching from database", err)
+		log.Fatal().Err(err).Msg("error fetching from database")
 	}
 
-	log.Printf("successfully fetched data")
-
+	log.Info().Msg("successfully retrieved data")
 	w.WriteHeader(http.StatusOK)
 
 	// Cache response in CDN for 30 minutes
 	// w.Header().Set("Cache-Control", "s-maxage=1800")
 
 	json.NewEncoder(w).Encode(ammo)
-	// jsonString, _ := json.Marshal(ammo["data"])
-	// fmt.Fprint(w, string(jsonString))
 }
 
 func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	var config Config
 	err := envconfig.Process("", &config)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal().Err(err).Msg("could not process environment variables")
 	}
 
 	if config.VERCEL_ENV == "development" {
-		log.Printf("%+v\n", config)
+		log.Info().Msgf("%+v\n", config)
 	}
 
 	if config.VERCEL_ENV != "development" {
 		if r.Header.Get(APIKeyHeader) != config.TC_API_KEY {
-			log.Printf("incoming request API key invalid: %s", r.Header.Get(APIKeyHeader))
+			log.Warn().Msgf("incoming request API key invalid: %s", r.Header.Get(APIKeyHeader))
 			fmt.Fprint(w, "not authorized")
+			w.WriteHeader(http.StatusUnauthorized)
 
 			return
 		}
 	}
-
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// This is the map we will build of all ammo and relevant information throughout this function
 	// We will eventually write this to our data store
@@ -159,9 +152,9 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	request, _ := http.NewRequest("POST", "https://tarkov-tools.com/graphql", bytes.NewBuffer(query))
 	response, err := client.Do(request)
 	if err != nil {
-		log.Printf("GraphQL request failed: %s\n", err)
+		log.Fatal().Err(err).Msg("GraphQL request failed")
 	} else {
-		log.Println("successfully fetched ammo IDs")
+		log.Info().Msg("successfully retrieved ammo IDs and prices")
 	}
 	defer response.Body.Close()
 
@@ -174,9 +167,9 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	request, _ = http.NewRequest(http.MethodGet, "https://raw.githack.com/TarkovTracker/tarkovdata/master/ammunition.json", nil)
 	response, err = client.Do(request)
 	if err != nil || response.StatusCode != http.StatusOK {
-		log.Fatalf("failed to fetch pen/damage data. Code: %d", response.StatusCode)
+		log.Fatal().Err(err).Int("code", response.StatusCode).Msg("non-200 response when fetching ammo data")
 	} else {
-		log.Println("successfully fetched pen/damage data")
+		log.Info().Msg("successfully retrieved ammo data")
 	}
 
 	data, _ = ioutil.ReadAll(response.Body)
@@ -184,7 +177,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 	var f interface{}
 	err = json.Unmarshal(data, &f)
 	if err != nil {
-		log.Fatal("error parsing JSON: ", err)
+		log.Fatal().Err(err).Msg("error parsing JSON")
 	}
 
 	// Need to do some Go magic to consume the TarkovTracker JSON properly. Also leverage the mapstructure package
@@ -197,7 +190,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 
 		err = mapstructure.Decode(itemsMap[item.ID], &result)
 		if err != nil {
-			log.Print("mapstructure error: ", err, item)
+			log.Warn().Err(err).Interface("item", item).Msg("mapstructure error")
 		}
 
 		// Initialize the final map with BSG data
@@ -301,19 +294,17 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 
 	mongoClient, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("could not connect to database")
 	}
 	defer mongoClient.Disconnect(ctx)
 
 	if err = mongoClient.Ping(ctx, readpref.Primary()); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("could not ping database")
 	}
 
-	log.Print("successfully connected to database")
+	log.Info().Msg("successfully connected to database, attempting to write updated data")
 
 	items := mongoClient.Database(config.MONGO_DB_NAME).Collection("ammo")
-
-	log.Print("attempting to write updated data to database")
 
 	res, err := items.ReplaceOne(
 		ctx,
@@ -321,12 +312,14 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 		bson.D{
 			{"_name", "ammo_data"},
 			{"_updated_at", time.Now().Format(time.RFC822)},
-			{"data", ammoByCaliber}})
+			{"data", ammoByCaliber},
+		})
 	if err != nil {
-		log.Fatal("error writing to database", err)
+		log.Fatal().Err(err).Msg("error writing to database")
 	}
 
-	log.Printf("successfully updated ammo data, number modified: %d", res.ModifiedCount)
+	log.Info().Msgf("successfully updated ammo data, number modified: %d", res.ModifiedCount)
 
 	fmt.Fprint(w, "success")
+	w.WriteHeader(http.StatusOK)
 }
