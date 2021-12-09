@@ -2,7 +2,7 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=tarkov-ammo-3d)
 
-[**tarkov-charts**](https://www.tarkov-charts.com/) is a web application that provides a variety of graphs that relates live data about ammounition types, attachments, and other items in the game [Escape From Tarkov](https://www.escapefromtarkov.com/). 
+[**tarkov-charts**](https://www.tarkov-charts.com/) is a web application that provides a variety of graphs that relates live data about ammunition types, attachments, and other items in the game [Escape From Tarkov](https://www.escapefromtarkov.com/). 
 
 Currently, the only graph is the [penetration, damage](https://escapefromtarkov.fandom.com/wiki/Ballistics#Armor_penetration_tables), and the cost of a single round type. These rounds are grouped by caliber, as all rounds in each caliber will have a similar "slope", usually the round with the highest penetration doing the least amount of damage, while also being the most expensive.
 
@@ -10,12 +10,14 @@ There are plenty of ammo charts that currently exist ([tarkov-tools](https://tar
 
 <h2>Tech</h2>
 
-- [Vercel](https://vercel.com/) to for hosting/CD/secret management
-- [React](https://reactjs.org/)/[PlotlyJS for React](https://plotly.com/javascript/react/)
-- [Go](https://golang.org/) for lambda function to maintain data store
-- [tarkov-tools.com](https://tarkov-tools.com/) GraphQL API for internal ammo IDs (so we don't have to hardcode & update when new ammo types get added)
-- [tarkov-market.com](https://tarkov-market.com/) REST API for price data
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to store JSON data
-- [GitHub Actions](https://github.com/features/actions) to periodically call Go lambda function to update data store
+- [Vercel](https://vercel.com/) for hosting/CD/secret management
+- [React](https://reactjs.org/) + [PlotlyJS for React](https://plotly.com/javascript/react/)
+- [Go](https://golang.org/) for lambda function to maintain data store and expose succinct API for web app
+- [tarkov-tools.com](https://tarkov-tools.com/) GraphQL API for internal IDs and prices
+- [tarkovdata](https://github.com/TarkovTracker/tarkovdata/) for item details 
+- ~~[tarkov-market.com](https://tarkov-market.com/) REST API for price data~~ (deprecated)
+- ~~[jsonbin.io](https://jsonbin.io/) to store JSON data~~ (deprecated)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to store aggregated data
+- [GitHub Actions](https://github.com/features/actions) to periodically call Go API to update data store
 
 [Lucidchart architecture diagram](https://lucid.app/lucidchart/invitations/accept/inv_30a42228-7a51-46c3-b983-e0d3dabc045a?viewport_loc=-89%2C-87%2C1558%2C1360%2C0_0)
