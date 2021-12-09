@@ -75,7 +75,7 @@ function App() {
     }}
     useResizeHandler={true}
     style={{width: "100%", height: "100%"}}
-    onUpdate={() => console.log(plot)}
+    // onUpdate={() => console.log(plot)}
   />
 
   return (

@@ -35,8 +35,6 @@ function createTracesFromJSON(ammoData) {
             }
         }
 
-        console.log(ammoArray[0])
-
         let ammoName = ammoArray[0].name
         trace.name = ammoName.substr(0, ammoName.indexOf(' ')).replace("mm", "");
         ammoArray.sort((a,b) => {
