@@ -31,6 +31,8 @@ func AmmoHandler(w http.ResponseWriter, r *http.Request) {
 func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	log.Info().Fields(r).Msg("handling incoming request")
+
 	var config Config
 	err := envconfig.Process("", &config)
 	if err != nil {
