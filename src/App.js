@@ -43,7 +43,7 @@ function App() {
   let releaseVersion = process.env.REACT_APP_RELEASE_VERSION;
   if (appState.ammoData) {
     finalTraces = createTracesFromJSON(appState.ammoData);
-    updatedAt = appState.ammoData["_updated_at"];
+    updatedAt = appState.ammoData["_human_timestamp"];
   }
 
   const plot = (
@@ -57,7 +57,7 @@ function App() {
         height: 1000,
         width: 1200,
         title:
-          `Tarkov Ammo by Caliber: Damage/Penetration/Price (last updated ` +
+          `Ammo by Caliber: Damage/Penetration/Price (last updated: ` +
           updatedAt +
           `)`,
         font: {
@@ -102,20 +102,19 @@ function App() {
       <div>
         {appState.loading ? (
           <div
+            className="loading"
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               height: "100vh",
+              color: "#e6e6e6",
             }}
           >
-            <div>
-              <Spinner
-                animation="border"
-                role="status"
-                style={{ color: "#e6e6e6" }}
-              />
+            <div className="spinner">
+              <Spinner animation="border" role="status" />
             </div>
+            <div className="spinner-text">Checking the stash...</div>
           </div>
         ) : (
           <Container fluid className="gx-0">

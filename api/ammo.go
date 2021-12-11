@@ -90,19 +90,27 @@ func GetAmmo(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	var ammo bson.M
-	err = items.FindOne(
-		ctx,
-		bson.M{"_name": "ammo_data"},
-	).Decode(&ammo)
+
+	// Passing bson.D{{}} as the filter matches all documents in the collection
+	res, err := items.Find(ctx, bson.D{{}}, options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(1))
 	if err != nil {
-		log.Fatal().Err(err).Msg("error fetching from database")
+		log.Fatal().Err(err).Msg("error fetching latest document")
 	}
 
-	log.Info().Msg("successfully retrieved data")
+	for res.Next(ctx) {
+		err = res.Decode(&ammo)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("error decoding latest document")
+		}
+	}
+
+	res.Close(ctx)
+
+	log.Info().Msg("successfully retrieved latest data")
 	w.WriteHeader(http.StatusOK)
 
-	// Cache response in CDN for 30 minutes
-	// w.Header().Set("Cache-Control", "s-maxage=1800")
+	// Cache response in CDN for 5 minutes
+	// w.Header().Set("Cache-Control", "s-maxage=300")
 
 	json.NewEncoder(w).Encode(ammo)
 }
@@ -308,19 +316,21 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 
 	items := mongoClient.Database(config.MONGO_DB_NAME).Collection("ammo")
 
-	res, err := items.ReplaceOne(
+	timestamp := time.Now().UTC()
+
+	// Insert new data into time-series DB
+	_, err = items.InsertOne(
 		ctx,
-		bson.M{"_name": "ammo_data"},
 		bson.D{
-			{"_name", "ammo_data"},
-			{"_updated_at", time.Now().Format(time.RFC822)},
+			{"timestamp", timestamp},
+			{"_human_timestamp", timestamp.Format(time.RFC822)},
 			{"data", ammoByCaliber},
 		})
 	if err != nil {
-		log.Fatal().Err(err).Msg("error writing to database")
+		log.Fatal().Err(err).Msg("error writing new document to database")
 	}
 
-	log.Info().Msgf("successfully updated ammo data, number modified: %d", res.ModifiedCount)
+	log.Info().Msg("successfully stored new ammo data")
 
 	fmt.Fprint(w, "success")
 	w.WriteHeader(http.StatusOK)

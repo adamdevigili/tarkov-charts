@@ -34,3 +34,12 @@ a:hover {
   bottom: 20px;
   position: absolute;
 }
+
+.spinner {
+  position: absolute;
+}
+
+.spinner-text {
+  position: relative;
+  top: 5%;
+}
