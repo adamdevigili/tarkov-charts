@@ -153,6 +153,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 					shortName
 					iconLink
 					avg24hPrice
+					lastLowPrice
 				}
 			}
         `,
@@ -221,7 +222,7 @@ func UpdateAmmo(w http.ResponseWriter, r *http.Request) {
 			ShortName:   result.ShortName,
 			Damage:      result.Ballistics.Damage,
 			Penetration: result.Ballistics.PenetrationPower,
-			Price:       item.Avg24hPrice,
+			Price:       item.LastLowPrice,
 		}
 
 	}

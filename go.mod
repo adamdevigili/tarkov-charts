@@ -3,7 +3,7 @@ module tarkov-charts
 go 1.16
 
 require (
-	github.com/adamdevigili/tarkov-charts-models v1.0.3
+	github.com/adamdevigili/tarkov-charts-models v1.0.4
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/rs/zerolog v1.26.0
