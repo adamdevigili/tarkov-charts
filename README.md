@@ -8,6 +8,8 @@ Currently, the only graph is the [penetration, damage](https://escapefromtarkov.
 
 There are plenty of ammo charts that currently exist ([tarkov-tools](https://tarkov-tools.com/ammo/) being my personal favorite), however none exist that relate this data to the price of the ammo, one of the most important data points, at least for newer players (or at the beginning of a "wipe", where all players start from the beginning), since it's unlikely they will be able to afford the highest-tier ammo, and will need to find the best "bang-for-buck" ammo.
 
+**NOTE**: As of 12.12 (December 12, 2021), many rounds have been removed from the flea market, leaving only trader prices, and eliminating a lot of the value of a graph like this. The future of this graph is undetermined at the moment.
+
 <h2>Tech</h2>
 
 - [Vercel](https://vercel.com/) for hosting/CD/secret management
